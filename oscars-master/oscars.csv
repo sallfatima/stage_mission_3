@@ -1,0 +1,127 @@
+Year,Year2,Film,Budget $,Outcome,First Month,takings
+1995,1995,Pulp Fiction,12.3,Nominee,80.1,6.52
+2011,2011,The Fighter,11.4,Nominee,54,4.72
+2010,2010,The Blind Side,37.6,Nominee,169.7,4.51
+2000,2000,The Sixth Sense,54.3,Nominee,241.5,4.44
+2012,2012,The Help,25.5,Nominee,109.7,4.3
+2004,2004,Lost in Translation,5,Nominee,21.2,4.28
+2010,2010,District 9,32.2,Nominee,117.4,3.64
+1995,1995,Forrest Gump,84.4,Winner,300.6,3.56
+2010,2010,Precious,10.7,Nominee,37.2,3.47
+2004,2004,The Lord of the Rings: The Return of the King,116.4,Winner,400.8,3.44
+1994,1994,The Fugitive,69.4,Nominee,234.8,3.38
+2011,2011,True Grit,36.4,Nominee,122.3,3.36
+2003,2003,The Lord of the Rings: The Two Towers,119.5,Nominee,372,3.11
+2011,2011,Black Swan,13.5,Nominee,40.5,3
+2011,2011,The Kids Are All Right,4.2,Nominee,12.3,2.97
+1998,1998,The Full Monty,5,Nominee,13.1,2.61
+1999,1999,Saving Private Ryan,91.3,Nominee,236,2.58
+1995,1995,Four Weddings and a Funeral,6.9,Nominee,17,2.47
+2008,2008,Juno,7.6,Nominee,18.6,2.45
+2014,2014,American Hustle,40,Nominee,95.4,2.39
+1996,1996,Apollo 13,96.9,Nominee,226,2.33
+2015,2015,American Sniper,58.8,Nominee,136.6,2.32
+1997,1997,Secrets & Lies,6.6,Nominee,15.1,2.3
+2001,2001,Erin Brockovich,66.1,Nominee,142.9,2.16
+1997,1997,Jerry Maguire,72.9,Nominee,157,2.15
+2002,2002,The Lord of the Rings: The Fellowship of the Ring,141.7,Nominee,304.8,2.15
+2014,2014,Gravity,100,Nominee,201.6,2.02
+2013,2013,Les Miserables,65.3,Nominee,128.8,1.97
+2015,2015,Boyhood,4,Nominee,7.5,1.88
+2011,2011,The Social Network,41.6,Nominee,78.1,1.87
+2013,2013,Argo,44.7,Winner,81.9,1.83
+2011,2011,Toy Story 3,208,Nominee,380.1,1.82
+1997,1997,Fargo,10.2,Nominee,18.1,1.78
+2000,2000,American Beauty,20.4,Winner,35.5,1.74
+2005,2005,Ray,47.9,Nominee,82.2,1.71
+2015,2015,Selma,20,Nominee,33.9,1.7
+1996,1996,Babe,44.7,Nominee,74.1,1.65
+2008,2008,Michael Clayton,23.3,Nominee,36.7,1.57
+2000,2000,The Green Mile,81.5,Nominee,126.3,1.55
+2011,2011,Inception,166.4,Nominee,256.8,1.54
+2014,2014,Captain Phillips,55,Nominee,83.3,1.51
+2014,2014,Dallas Buyers Club,5,Nominee,7.5,1.5
+2001,2001,Gladiator,136.2,Winner,202.2,1.48
+2010,2010,Inglourious Basterds,75.1,Nominee,109.4,1.45
+2010,2010,Up,187.8,Nominee,265.4,1.41
+1998,1998,As Good as It Gets,71.8,Nominee,101.1,1.4
+2013,2013,Lincoln,65.3,Nominee,91.5,1.4
+2013,2013,Django Unchained,100.5,Nominee,136.8,1.36
+2006,2006,Brokeback Mountain,16.1,Nominee,21.3,1.32
+1998,1998,Titanic,287,Winner,368,1.28
+2006,2006,Good Night and Good Luck.,8.1,Nominee,10.2,1.26
+2012,2012,Moneyball,51,Nominee,63.6,1.24
+2013,2013,Beasts of the Southern Wild,1.8,Nominee,2.24,1.24
+2007,2007,The Departed,101.5,Winner,120.1,1.18
+2003,2003,Chicago,38.1,Winner,44.5,1.16
+1997,1997,Shine,8,Nominee,9.24,1.15
+2010,2010,Up in the Air,32.2,Nominee,36.9,1.14
+2001,2001,Crouching Tiger Hidden Dragon,19.8,Nominee,22.2,1.12
+2004,2004,Seabiscuit,106.5,Nominee,120.1,1.12
+2008,2008,No Country for Old Men,27.2,Winner,29.8,1.1
+2011,2011,Winter's Bone,2.1,Nominee,2.22,1.07
+2010,2010,Avatar,456,Nominee,473.1,1.03
+2012,2012,War Horse,71.3,Nominee,72.8,1.02
+2004,2004,Mystic River,37.1,Nominee,37.8,1.01
+2007,2007,Little Miss Sunshine,9,Nominee,9.02,1
+2014,2014,12 Years a Slave,20,Winner,19.8,0.99
+2014,2014,Philomena,12,Nominee,11.9,0.99
+2014,2014,The Wolf of Wall Street,100,Nominee,95.5,0.96
+1994,1994,The Remains of the Day,23.7,Nominee,22.7,0.96
+2002,2002,A Beautiful Mind,101.4,Winner,90.4,0.89
+1998,1998,L.A. Confidential,50.2,Nominee,44.2,0.88
+2001,2001,Traffic,63.5,Nominee,56.2,0.88
+2007,2007,Babel,22.6,Nominee,16.8,0.74
+2013,2013,Silver Linings Playbook,21.1,Nominee,15.4,0.73
+2015,2015,The Theory of Everything,15,Nominee,10.7,0.71
+2002,2002,Moulin Rouge,68.9,Nominee,46.6,0.67
+1996,1996,Braveheart,107.4,Winner,70.7,0.65
+1998,1998,Good Will Hunting,14.4,Nominee,9.2,0.64
+2003,2003,Gangs of New York,123.3,Nominee,78.6,0.63
+2009,2009,The Curious Case of Benjamin Button,174.4,Nominee,108.6,0.62
+2004,2004,Master and Commander: The Far Side of the World,167.1,Nominee,102.2,0.61
+1996,1996,Sense and Sensibility,24.6,Nominee,14.1,0.57
+2005,2005,Finding Neverland,30,Nominee,16.8,0.56
+2012,2012,Midnight in Paris,30.6,Nominee,17.1,0.56
+2013,2013,Life of Pi,120.6,Nominee,66.5,0.55
+1997,1997,The English Patient,51,Winner,26.8,0.52
+2006,2006,Munich,87,Nominee,44.5,0.51
+2010,2010,A Serious Man,7.5,Nominee,3.9,0.51
+2008,2008,Atonement,32.6,Nominee,16.3,0.5
+2014,2014,Her,23,Nominee,11.3,0.49
+2015,2015,Birdman,18,Winner,8.9,0.49
+2002,2002,Gosford Park,23.4,Nominee,11.4,0.49
+1999,1999,Shakespeare in Love,36.5,Winner,17.7,0.48
+2009,2009,Milk,21.8,Nominee,10,0.46
+2005,2005,The Aviator,131.8,Nominee,58.8,0.44
+2003,2003,The Hours,31.8,Nominee,13.7,0.43
+1995,1995,The Silence of the Lambs,38.4,Nominee,16.1,0.42
+2000,2000,The Insider,92.3,Nominee,37.1,0.4
+2006,2006,Capote,8.1,Nominee,3.12,0.38
+2015,2015,Whiplash,3.3,Nominee,1.2,0.36
+1994,1994,Schindler's List,39.5,Winner,14.4,0.36
+2006,2006,Crash,11.6,Winner,4.27,0.36
+2002,2002,In the Bedroom,2.2,Nominee,0.77,0.35
+2007,2007,The Queen,16.9,Nominee,5.58,0.33
+2001,2001,Chocolat,33.1,Nominee,10.5,0.31
+2009,2009,Slumdog Millionaire,15.3,Winner,4.57,0.3
+2005,2005,Sideways,20.4,Nominee,5.66,0.27
+2011,2011,127 Hours,18.7,Nominee,5.2,0.27
+2011,2011,The King's Speech,15.6,Winner,4,0.25
+2010,2010,An Education,8,Nominee,1.88,0.23
+1996,1996,The Postman (Il Postino),119.3,Nominee,27.4,0.22
+2008,2008,There Will Be Blood,27.2,Nominee,5.85,0.21
+2014,2014,Nebraska,12,Nominee,2.4,0.2
+2012,2012,Hugo,183.4,Nominee,37.8,0.2
+2009,2009,Frost/Nixon,31.6,Nominee,5.47,0.17
+2010,2010,The Hurt Locker,16.1,Winner,2.88,0.17
+2012,2012,The Tree of Life,35.7,Nominee,4.67,0.13
+2013,2013,Zero Dark Thirty,52.8,Nominee,5.76,0.1
+2012,2012,The Artist,16.3,Winner,1.59,0.09
+2003,2003,The Pianist,44.5,Nominee,3.96,0.08
+1999,1999,The Thin Red Line,73,Nominee,5.05,0.06
+2009,2009,The Reader,35.4,Nominee,2.18,0.06
+2005,2005,Million Dollar Baby,35.9,Winner,1.54,0.04
+2007,2007,Letters from Iwo Jima,14.7,Nominee,0.61,0.04
+2013,2013,Amour,9.7,Nominee,0.4,0.04
+1993,1993,,,Null,,

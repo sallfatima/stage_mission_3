@@ -1,0 +1,4 @@
+correction des equiprobables
+
+resultat edf
+bonne pratique de tensorflow

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Assignment 3</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    {% block header %}
+    <h3>Assignment 6 -  Task 1 (Click to hide Bubble)</h3>
+    {% endblock %}
+    <div id="dataContainer">
+      <ul>
+        <li><a href="bubblechart">Bubblechart</a></li>
+        <li><a href="barchart">Barchart</a></li>
+        <li id="showAllButton"><a href="#contact">Unhide Bubbles</a></li>
+      </ul>
+    </div>
+
+
+  </body>
+</html>
+{% block javascript %}
+<script type="text/javascript">
+
+var dataSet = {{ data | safe }};
+
+data = dataSet;
+
+categorical = [];
+numerical_barrels = [];
+numerical_highway = [];
+numerical_displ = [];
+
+dataSet = [];
+
+//take first 100 data points
+for (var i = 0; i < 50; i++) {
+  categorical[i] = data[i].fields.make;
+  numerical_barrels = data[i].fields.barrels08;
+  numerical_highway = data[i].fields.highway08;
+  numerical_displ = data[i].fields.displ;
+
+  dataSet.push([categorical, numerical_displ, numerical_highway, numerical_barrels]);
+
+}
+
+//Width and height
+var width = 700;
+var height = 400;
+var padding = 30;
+var paddingLabel = 50;
+
+//get different models for coloring
+var models = getDifferentModels(categorical);
+
+//assign colors to models
+var dict = assignColor(models);
+
+window.onload = function() {
+myPlot = bubbleChart(document.getElementById("dataContainer"), dataSet);
+myPlot.init(width,height,padding,paddingLabel);
+};
+
+
+ function bubbleChart (myContainerDiv, dataSet) {
+     var returnDictionary = {};
+     returnDictionary["init"] = function(width, height, padding, paddingLabel) {
+
+       //Create SVG element
+       var svg = d3.select(myContainerDiv)
+       .append("svg")
+       .attr("id", "svgImage")
+       .attr("width", width)
+       .attr("height", height);
+
+       var legend =  d3.select(myContainerDiv)
+       .append("svg")
+       .attr("width", 100)
+       .attr("height", 400);
+
+       // text label for the x axis
+       svg.append("text")
+       .attr("x", width/2 )
+       .attr("y",  height + padding/2 )
+       .style("text-anchor", "middle")
+       .text("Engine displacement in Liter");
+
+       //text label for y axis
+       svg.append("text")
+       .attr("transform", "rotate(-90)")
+       .attr("y", 0 - paddingLabel)
+       .attr("x", 0 - height/2)
+       .attr("dy", "3em")
+       .style("text-anchor", "middle")
+       .text("Highway miles per Gallon");
+
+
+       var div = d3.select("body").append("div")
+       .attr("class", "tooltip")
+       .style("opacity", 0);
+
+       //xScale
+       var xScale = d3.scaleLinear()
+       .domain([1, d3.max(dataSet, function(d) { return d[1]; })])
+       .range([padding, width-padding*2]);
+       //yScale
+       var yScale =  d3.scaleLinear()
+       .domain([8,d3.max(dataSet, function(d){return d[2]; })+5])
+       .range([height-padding, padding]);
+
+       //zScale
+       var zScale = d3.scaleSqrt()
+       .domain([0,d3.max(dataSet, function(d) { return d[3]; })])
+       .range([1,30]);
+
+       var xAxis = d3.axisBottom()
+       .scale(xScale);
+       var yAxis = d3.axisLeft()
+       .scale(yScale);
+
+       var gAxisX = svg.append('g')
+       .attr("class", "axis")
+       .attr("transform", "translate(0," + (height - padding) + ")")
+       .call(xAxis);
+
+       var gAxisY = svg.append('g')
+       .attr("class", "yxis")
+       .attr("transform", "translate(" + padding + ",0)")
+       .call(yAxis);
+
+       //create circles according to dataSet
+       var circles = svg.selectAll("circle")
+       .data(dataSet)
+       .enter()
+       .append("circle")
+       .attr("cx", function(dataValue) {
+         return xScale(dataValue[1]);
+       })
+       .attr("cy", function(dataValue) {
+         return yScale(dataValue[2]);
+       })
+       .attr("r",function(dataValue) {
+         return zScale(dataValue[3]);
+       })
+       .attr("fill", function(dataValue, i) {
+         return dict[dataValue[0][i]];
+       })
+       .attr("fill-opacity", 0.5)
+       .on("mouseover", function(dataValue, i) {
+         div.transition()
+         .duration(200)
+         .style("opacity", 0.9);
+         div.html(dataValue[0][i] + "<br/>" + Math.round(dataValue[3]))
+         .style("left", (d3.event.pageX) + "px")
+         .style("top", (d3.event.pageY - 28) + "px");
+       });
+
+       //hide on click
+       circles.on("click", function() {
+         hideCircle(this);
+       });
+
+
+       var legendRectSize = 8;
+       var legendSpacing = 4;
+
+       var legend = legend.selectAll('.legend')
+         .data(models)
+         .enter()
+         .append('g')
+         .attr('class', 'legend')
+         .attr('transform', function(d, i) {
+           var height = legendRectSize + legendSpacing;
+           var horz = -2 * legendRectSize;
+           var vert = i * height;
+           return 'translate(' + horz + ',' + vert + ')';
+         });
+
+         legend.append('rect')
+         .attr('width', legendRectSize)
+         .attr('height', legendRectSize)
+         .attr("fill", function(dataValue) {
+           return dict[dataValue];
+         })
+
+         legend.append('text')
+         .attr('x', legendRectSize + legendSpacing)
+         .attr('y', legendRectSize - legendSpacing)
+         .text(function(dataValue) {
+           return dataValue; });
+
+        document.getElementById('showAllButton').addEventListener('click', function() {
+          svg.selectAll("circle")
+          .style("visibility", "visible");
+        });
+
+
+     };
+
+     return returnDictionary;
+};
+
+//get different models in dataSet
+function getDifferentModels(dataArray) {
+
+  diffModels = [];
+
+  for (var i = 0; i < dataArray.length; i++) {
+    if (diffModels.indexOf(dataArray[i]) > -1) {
+      continue;
+    } else {
+      diffModels.push(dataArray[i]);
+    }
+  }
+
+  return diffModels;
+
+}
+
+//assigns random colors to models
+function assignColor(dataArray) {
+
+  dict = {};
+
+  for (var i = 0; i < dataArray.length; i++) {
+    dict[dataArray[i]] = getRandomColor();
+  }
+
+  return dict;
+}
+
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++ ) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+function hideCircle(circle) {
+  circle.style.visibility = 'hidden';
+}
+
+</script>
+{% endblock %}

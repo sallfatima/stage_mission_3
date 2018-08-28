@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+</head>
+<body>
+  <!--Added comment via command line -->
+  <style>
+        .chart{
+                width: 100%;
+                height: 500px;
+        }
+
+        .d3-tip {
+          line-height: 1;
+          font-size: 0.6em;
+          padding: 5px;
+          background: rgba(70, 130, 180, 0.9);
+          color: rgb(255,255,255);
+          border-radius: 2px;
+        }
+
+        h2 {
+          color: black;
+          text-align: center;
+          font-size: 1.2em;
+        }
+
+        h3 {
+          color: black;
+          text-align: center;
+          font-size: 0.7em;
+        }
+
+        .axis {
+          font-size: 0.6em;
+        }
+
+        text {
+          font-size: 1em;
+        }
+
+        path {
+          fill: none;
+          stroke: black;
+          stroke-width: 2px;
+        }
+
+        .tick {
+          fill: none;
+          stroke: black;
+        }
+
+        circle {
+          opacity: 0.4;
+          stroke: none;
+        }
+
+        .line_plot {
+          fill: none;
+          stroke: #4eb0bb;
+          stroke-width: 1px;
+        }
+  
+  </style>
+  <h2>Header</h2>
+  <h3>Circle size corresponds to the proportion of money (relative to budget)<br/>a film made back at the box office in it's opening month</h3>
+  <div class='chart'></div>
+    <script type="text/javascript">
+      
+      format = d3.time.format("%Y");
+
+      function draw(data) {
+      
+        /*
+          D3.js setup code
+        */
+		  
+		    // Set up global variables
+        "use strict";
+        var margin = 40,
+            width = d3.select(".chart")[0][0].scrollWidth - margin,
+            height = d3.select(".chart")[0][0].scrollHeight - margin,
+            intervals = 1;
+
+        if (width < 500) {
+          intervals = 2;
+        }
+
+        var radius = 4,
+            multiplier = 2;
+          
+        // Use d3 to insert a chart title
+        d3.select("h2")
+            .text("Oscars Best Picture Nominees by Production Budget");
+
+		    // Use d3 to create svg and then append g for chart
+        var svg = d3.select("div")
+          .append("svg")
+            .attr("width", width + margin)
+            .attr("height", height + margin)
+          .append('g')
+            .attr('class','chart');
+
+        /*
+          Chart construction code
+        */
+        // Creates circles
+        d3.select('svg')
+            .selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+
+        // Determines scale for x-axis (time)
+        var time_extent = d3.extent(data, function(d) {
+            return d['Year'];
+          });
+
+        var time_scale = d3.time.scale()
+            .range([margin, width])
+            .domain(time_extent);
+
+        // Determines scale for y axis
+        var count_extent = d3.extent(data, function(d) {
+            return d['Budget $'];
+          });
+
+        var count_scale = d3.scale.linear()
+            .range([height, margin])
+            .domain(count_extent);
+
+        // Creates x-axis
+        var time_axis = d3.svg.axis()
+            .scale(time_scale)
+            .ticks(d3.time.years, intervals);
+
+        d3.select("svg")
+            .append('g')
+            .attr('class', 'x axis')
+            .attr('transform', "translate(0," + height + ")")
+            .call(time_axis);
+
+        // Creates y-axis
+        var count_axis = d3.svg.axis()
+            .scale(count_scale)
+            .orient("left");
+
+        d3.select("svg")
+            .append('g')
+              .attr('class', 'y axis')
+              .attr('transform', "translate(" + margin + ",0)")
+              .call(count_axis)
+            .append('text')
+              .attr('transform', 'rotate(-90)')
+              .attr('x', -margin)
+              .attr('y', 6)
+              .attr('dy', ".71em")
+              .style("text-anchor", "end")
+              .text("Production Budget Millions $");
+
+        // Creates tooltip
+        var tip = d3.tip()
+          .attr('class', 'd3-tip')
+          .offset([-5,0])
+          .html(function(d){
+            return "<strong>" + d['Film'] + "</strong> <br/>"
+            + d['Outcome'] + ' in ' + d['Year2'] + "<br/>"
+            + "Production Budget: $" + d['Budget $'] + "m<br/>"
+            + "First Month's Takings: $" + d['First Month'] + "m"
+          });
+
+        // Plots circles
+        d3.selectAll('circle')
+            .attr('cx', function(d) {
+                return time_scale(d['Year']);
+            })
+            .attr('cy', function(d) {
+                return count_scale(d['Budget $']);
+            })
+            // Changes r and fill colour depending on specified criteria
+            .attr('r', function(d) {
+                return Math.sqrt(d['takings']) * width/100;
+            })
+            .attr('fill', function(d) {
+                if (d['Outcome'] === 'Winner')  {
+                    return 'red';
+                } else {
+                    return 'steelblue';
+                }
+            })
+            .call(tip)
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide);
+
+        // Adds legend
+        var legend = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", "translate(" + (margin * 2) + "," + (margin * 1.5) + ")")
+            .selectAll("g")
+            .data(["Winner", "Nominee"])
+            .enter().append("g");
+
+        legend.append("circle")
+            .attr("cy", function(d, i) {
+                 return i * 30;
+            })
+            .attr("r", function(d) {
+                  return radius + 2;
+            })
+            .attr("fill", function(d) {
+                if (d == "Winner") {
+                    return 'red';
+                } else {
+                    return 'steelblue';
+                }
+            })
+
+        legend.append("text")
+            .attr("y", function(d, i) {
+                  return i * 30 + 5;
+            })
+            .attr("x", radius * 5)
+            .text(function(d) {
+                return d;
+            });     
+        };
+
+      // Redraws chart on resize 
+      function update(){
+        d3.select('svg').remove();
+        d3.csv("oscars.csv", function(d) {
+          d['Budget $'] = +d["Budget $"];
+          d['Year'] = format.parse(d['Year']);
+          d['takings'] = +d['takings'];
+          d['First Month'] = +d['First Month'];
+          return d;
+        }, draw);
+      };
+
+      d3.select(window).on('resize', update); 
+
+      </script>
+  <script type="text/javascript">
+  /*
+    Use D3 to load the CSV file
+    and pass the contents of it to the draw function
+    */
+  d3.csv("oscars.csv", function(d) {
+        d['Budget $'] = +d["Budget $"];
+        d['Year'] = format.parse(d['Year']);
+        d['takings'] = +d['takings'];
+        d['First Month'] = +d['First Month'];
+        return d;
+    }, draw);
+  </script>
+</body>
+</html>

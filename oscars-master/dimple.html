@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+  <style>
+  	h2 {
+  		position: relative;
+    	left: 60px;
+    	top: 50px;
+  	}
+  </style>
+    <script type="text/javascript">
+      function draw(data) {
+      
+      /*
+        D3.js setup code
+      */
+		  
+		  // Set up global variables
+          "use strict";
+          var margin = 40,
+              width = 1000 - margin,
+              height = 600 - margin;
+              
+       //   debugger;
+          
+          // Use d3 to insert a chart title
+          var header = d3.select("body")
+            .append("h2")
+              .text("Oscars Best Picture Nominees by Production Budget");
+        
+
+		  // Use d3 to create svg and then append g for chart
+          var svg = d3.select("body")
+            .append("svg")
+              .attr("width", width + margin)
+              .attr("height", height + margin)
+            .append('g')
+                .attr('class','chart');
+
+      /*
+        Dimple.js Chart construction code
+      */
+
+          var myChart = new dimple.chart(svg, data);
+          
+          //data = dimple.filterData(data, "outcome", "Winner");
+          
+          // Create x-axis
+          var x = myChart.addCategoryAxis("x", "Year"); 
+          // x.dateParseFormat = "%Y";
+          // x.tickFormat = "%Y";
+          
+          // Create y-axis
+          myChart.addMeasureAxis("y", "Budget $");
+          
+          myChart.addMeasureAxis("z", "Opening Weekend Takings $")
+         
+          
+          // First argument groups by a column
+          myChart.addSeries(["Film","Outcome"], dimple.plot.bubble);
+          
+          myChart.addLegend(120, 70, 100, 40, "right");
+          
+          // Draw chart
+          myChart.draw();
+        };
+      </script>
+  </head>
+<body>
+  <script type="text/javascript">
+  /*
+    Use D3 (not dimple.js) to load the TSV file
+    and pass the contents of it to the draw function
+    */
+  d3.csv("oscars_data.csv", draw);
+  </script>
+</body>
+</html>

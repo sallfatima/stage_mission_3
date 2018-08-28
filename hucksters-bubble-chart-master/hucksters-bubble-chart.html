@@ -1,0 +1,288 @@
+<link rel="import" href="../polymer/lib/utils/render-status.html">
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="hucksters-bubble-chart">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      :host .tooltip {
+        display: table;
+        position: absolute;
+      }
+      :host .tooltip table {
+        table-layout: fixed;
+        border-collapse: collapse;
+      }
+      :host .tooltip table td {
+        padding: 10px;
+        letter-spacing: 1px;
+        text-align: center;
+      }
+      :host .tooltip table tbody tr:nth-child(odd) {
+        background: "#FF33CC";
+      }
+      :host .tooltip table tbody tr:nth-child(even) {
+        background: "#E495E4";
+      }
+    </style>
+    <div id="hucksters_bubble_chart_wp" width=[[width]] height=[[height]]>
+    </div>
+  </template>
+
+  <script>
+    /**
+     * `hucksters-bubble-chart`
+     * Bubble chart web component
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class HuckstersBubbleChart extends Polymer.Element {
+      static get is() {
+        return 'hucksters-bubble-chart';
+      }
+
+      static get properties() {
+        return {
+          width: {
+            type: Number,
+            value: 500,
+          },
+          height: {
+            type: Number,
+            value: 300,
+          },
+          title: {
+            type: String,
+          },
+          xlabel: {
+            type: String,
+          },
+          ylabel: {
+            type: String,
+          },
+          chartData: {
+            type: Object,
+            observer: '_updateChartData',
+          },
+        };
+      }
+
+      _updateChartData(newChartData, oldChartData) {
+
+        console.log(newChartData, oldChartData);
+
+        if (oldChartData === undefined) {
+          console.log('first');
+        } else {
+          this.chartClear();
+          this.chartRender(newChartData);
+        }
+      }
+
+      constructor() {
+        super();
+        this.margin = {
+          top: 45,
+          right: 0,
+          bottom: 45,
+          left: 50,
+        };
+      }
+
+      ready() {
+        super.ready();
+        Polymer.RenderStatus.afterNextRender(this, function () {
+          this.loadData(this.chartData, this.chartDataURL)
+            .then(chartData => {
+              this.thereIsNoData = false;
+              this.draw(chartData);
+            })
+            .catch(err => console.error(err));
+        });
+      }
+
+      loadData(chartData, chartDataURL) {
+        return new Promise(function (resolve, reject) {
+          if (chartData === undefined) {
+            if (chartDataURL === undefined) {
+              reject(new Error('You have to set chartData or chartDataURL attributes'));
+            } else {
+              reject(new Error('Not implemented yet'));
+            }
+          };
+
+          resolve(chartData);
+        });
+      }
+
+      chartFramework() {
+        let margin = this.margin;
+        this.tooltip = d3.select(this.$.hucksters_bubble_chart_wp)
+          .append('div')
+          .attr('class', 'tooltip')
+          .style('opacity', 0);
+
+        this.svg = d3.select(this.$.hucksters_bubble_chart_wp)
+          .append('svg')
+          .attr('width', this.width)
+          .attr('height', this.height)
+          .append('g')
+          .attr('transform', `translate(${margin.left},${margin.top})`);
+
+        this.svg.append('text')
+          .attr('class', 'signature header')
+          .attr('x', this.width - margin.right - margin.left)
+          .attr('y', this.height - margin.bottom)
+          .attr('text-anchor', 'end')
+          .text(this.xlabel);
+        this.svg.append('text')
+          .attr('class', 'signature')
+          .attr('x', -10)
+          .attr('y', (this.height - margin.bottom) / 2)
+          .attr('text-anchor', 'middle')
+          .attr('transform', `rotate(270, -10, ${(this.height - margin.bottom) / 2})`)
+          .text(this.ylabel);
+        this.svg.append('text')
+          .attr('class', 'signature')
+          .attr('x', -10)
+          .attr('y', -15)
+          .attr('text-anchor', 'start')
+          .attr('font-family', 'Verdana')
+          .attr('font-size', 23)
+          .text(this.title);
+      }
+
+      chartClear() {
+        this.svg.selectAll('circle').remove();
+        this.svg.selectAll('g.axis').remove();
+      }
+
+      chartRender(chartData) {
+        let margin = this.margin;
+        let tooltip = this.tooltip;
+        let svg = this.svg;
+        let color = (clr) => {
+          if (clr === 'red') {
+            return '#EF3E4A';
+          } else if (clr === 'yellow') {
+            return '#FBFE56';
+          } else if (clr === 'green') {
+            return '#17C37B';
+          } else {
+            return '#2C3979';
+          }
+        };
+
+        let width = this.width - margin.left - margin.right;
+        let height = this.height - margin.top - margin.bottom;
+
+        let radius = d3.scaleLinear()
+          .domain([d3.min(chartData, (d) => d.r), d3.max(chartData, (d) => d.r)])
+          .range([10, Math.min(width, height) * 0.2]);
+        let radiusMax = d3.max(chartData, (d) => radius(d.r)) + 5;
+        let x = d3.scaleLinear()
+          .domain([d3.min(chartData, (d) => d.x), d3.max(chartData, (d) => d.x)])
+          .range([radiusMax, width - radiusMax]);
+        let y = d3.scaleLinear()
+          .domain([d3.min(chartData, (d) => d.y), d3.max(chartData, (d) => d.y)])
+          .range([height - radiusMax, radiusMax]);
+        let xForAxis = d3.scaleLinear()
+          .domain([d3.min(chartData, (d) => d.x), d3.max(chartData, (d) => d.x)])
+          .range([0, width]);
+        let yForAxis = d3.scaleLinear()
+          .domain([d3.min(chartData, (d) => d.y), d3.max(chartData, (d) => d.y)])
+          .range([height, 0]);
+        let xAxis = d3.axisTop(xForAxis)
+          .ticks(4)
+          .tickSize(height);
+        let yAxis = d3.axisRight(yForAxis)
+          .ticks(2)
+          .tickSize(width);
+        let gYAxis = svg.append('g')
+          .attr('class', 'y axis')
+          .call(yAxis);
+        gYAxis.select('.domain').remove();
+        gYAxis.selectAll('.tick line')
+          .attr('stroke', '#C0C2CE')
+          .attr('stroke-dasharray', '2,2');
+        gYAxis.selectAll('.tick text').attr('x', 4).attr('dy', -4);
+        let gXAxis = svg.append('g')
+          .attr('class', 'x axis')
+          .attr('transform', `translate(0, ${height})`)
+          .call(xAxis);
+        gXAxis.select('.domain').remove();
+        gXAxis.selectAll('.tick line')
+          .attr('stroke', '#B7E3E4')
+          .attr('stroke-dasharray', '2,2');
+        gXAxis.selectAll('.tick text').attr('y', 12).attr('dx', -6);
+        svg.selectAll('circle')
+          .data(chartData.sort((x, y) => d3.descending(x.r, y.r)))
+          .enter()
+          .append('circle')
+          .attr('cx', (d) => x(d.x))
+          .attr('cy', (d) => y(d.y))
+          .attr('r', (d) => radius(d.r))
+          .style('fill', (d) => color(d.color))
+          .style('fill-opacity', 0.9)
+          .on('mouseover', function (d) {
+            let _this = this;
+
+            svg.selectAll('circle')
+              .filter(function (d) {
+                return _this != this;
+              })
+              .transition()
+              .duration(200)
+              .style('fill-opacity', 0.3);
+
+            tooltip.transition()
+              .duration(200)
+              .style('opacity', 1);
+
+            tooltip.append('table')
+              .append('tbody')
+              .selectAll('tr')
+              .data(d.info)
+              .enter()
+              .append('tr')
+              .selectAll('td')
+              .data(function (d) {
+                return d;
+              })
+              .enter()
+              .append('td')
+              .text(function (d) {
+                return d.value;
+              });
+
+            tooltip.style('left', (d3.event.pageX) + 'px')
+              .style('top', (d3.event.pageY - 28) + 'px');
+          })
+          .on('mouseout', function (d) {
+            tooltip.transition()
+              .duration(500)
+              .style('opacity', 0);
+
+            tooltip.select('table').remove();
+
+            svg.selectAll('circle')
+              .transition()
+              .duration(500)
+              .style('fill-opacity', 1);
+
+          });
+      }
+
+      draw(chartData) {
+        this.chartFramework();
+        this.chartRender(chartData);
+      }
+    }
+
+    window.customElements.define(HuckstersBubbleChart.is, HuckstersBubbleChart);
+  </script>
+</dom-module>

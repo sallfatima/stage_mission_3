@@ -1,0 +1,27 @@
+[
+  {
+    "fund": "Fidelity OTC Portfolio",
+    "id": 1,
+    "total_amount": 6.2,
+    "group": 1
+  },
+  {
+    "fund": "Centaur Total Return Fund",
+    "id": 2,
+    "total_amount": 10.6,
+    "group": 2
+  },
+  {
+    "fund": "T Rowe Price Media & Telecommunications Fund",
+    "id": 3,
+    "total_amount": 3.09,
+    "group": 3
+  },
+ 
+  {
+    "fund": "ICON Energy Fund;S",
+    "id": 11,
+    "total_amount": 0.09,
+    "group": 4
+  }
+]

@@ -1,0 +1,35 @@
+<html>
+<body>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script>
+d3.select("body").append("svg").attr("width", "300").attr("height", "300");
+
+var rectData =
+ [{"x": 5, "y": 25,  "height": 50, "width": 50, "color": "#1f77b4"},
+  {"x": 5, "y": 100, "height": 50, "width": 50, "color": "#ff7f0e"},
+  {"x": 5, "y": 175, "height": 50, "width": 50, "color": "#2ca02c"},
+  {"x": 5, "y": 250, "height": 50, "width": 50, "color": "#d62728"}];
+
+var rects = d3.select("svg").selectAll("rect").data(rectData).enter().append("rect");
+
+rects
+    .attr("x",      function(d, i) { return d.x;       })
+    .attr("y",      function(d, i) { return d.y;       })
+    .attr("width",  function(d, i) { return d.width;   })
+    .attr("height", function(d, i) { return d.height;  })
+    .attr("id",     function(d, i) { return "rect-"+i; });  
+
+d3.selectAll("rect")
+    .on("mouseover", function(d, i) {
+        d3.selectAll("rect")
+            .style("fill",function(d, i) { return d.color; }); 
+    });
+
+d3.selectAll("rect")
+    .on("mouseout", function(d, i) {
+        d3.selectAll("rect")
+            .style("fill", "black");
+    });    
+</script>
+</body>
+</html>    

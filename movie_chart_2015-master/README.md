@@ -1,0 +1,2 @@
+# movie_chart_2015
+An interactive bubble chart created with D3.js that summarizes the financial performance and metascores of major films released in 2015.  Hovering over a data point bubble of a movie outputs its corresponding data in text form at the top of the chart.  The output consists of the movie's title and the 3 dimensions of data that the bubble represents:  Metascore (x), ROI (y), and Budget (bubble size).  The demo for this can be found here:  http://psyglyphik.github.io/movie_chart_2015/

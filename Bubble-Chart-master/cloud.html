@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="UTF-8">
+    <title>Homeboyz twitter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <!-- APP js -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom JavaScript for this theme -->
+    <script src="/static/js/scrolling-nav.js"></script>
+    <!-- add d3 from web -->
+    <script src="http://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <script src="/static/app-cloud.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/static/css/scrolling-nav.css" rel="stylesheet">
+<style>
+
+.bg-primary{
+  background-color:#2851a1 !important;
+
+}
+.text-white{
+  color:#ffdb19 !important;
+}
+header {
+    padding: 156px 0 10px !important;
+}
+
+
+rect {
+  fill: none;
+  pointer-events: all;
+}
+
+circle {
+  fill: none;
+  stroke-width: 2.5px;
+}
+.text {
+  position: right !important;
+}
+
+</style>
+  </head>
+
+  <body id="page-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top"><img src="/static/logonew.png " width="110"/></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="">Home</a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <header class="bg-primary text-white">
+      <div class="container text-center">
+        <h1>Twitter Streaming App</h1>
+        <p class="lead">Get Trending</p>
+      </div>
+    </header>
+
+    <section id="about">
+
+
+            <div class="chart"></div>
+            <div class="text"></div>
+
+
+    </section>
+
+
+
+
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; www.homeboyz.co.ke 2018</p>
+      </div>
+      <!-- /.container -->
+    </footer>
+
+
+  </body>
+  <script src="//d3js.org/d3.v3.js"></script>
+  <script src="/static/app-cloud.js"></script>
+  <script src="/static/d3.layout.cloud.js"></script>
+  <script>
+  //update function for visualization
+
+  var diameter = 500,
+      format = d3.format(",d"),
+      colors = d3.scale.category20c(); //color category= d3.scale.category10();;
+
+
+  var svg = d3.select(".chart").append("svg")
+              .attr("width", 700)
+              .attr("height", 600)
+              .attr("class", "bubble");
+
+  var bubble = d3.layout.pack()
+                 .sort(null)
+                 .size([diameter, diameter])
+                 .padding(3)
+                  //<- must return a number
+
+                  var frequency_list1 = [d3.entries(hash)];
+
+                var colors1 = d3.scale.category10();
+                console.log(colors);
+
+                var groupG = d3.select(".text").append("svg")
+                .attr("width", 1000)
+                .attr("height", 350)
+                .attr("class", "wordcloud")
+                .append("g")
+                .attr("transform", "translate(320,200)");
+
+
+                d3.layout.cloud().size([1000, 350])
+                .words(frequency_list1)
+                .rotate(0)
+                .fontSize(function(d) { return d.value; })
+                .on("end", draw)
+                .start();
+
+                function draw(words) {
+                  var textContainer = groupG
+                  .selectAll("text")
+                  .data(words);
+
+                  textContainer.enter().append("text");
+
+                  textContainer.style("font-size", function(d) { return d.value + "px"; })
+                  .style("fill", function(d, i) { return colors1(i); })
+                  .attr("transform", function(d) {
+                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                  })
+                  .text(function(d) { return d.key; })
+                  // add tooltip for mouseover count info
+                  .append("text:title")
+                  .text(function(d) { return d.value; });
+                }
+
+  </script>
+
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset=utf-8>
+      <title>D3 Bubbles</title>
+      <link rel="stylesheet" type="text/css" href="style.css"/>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.js"></script>
+    </head>
+    <body>
+    <div class="container"><div id="vis"></div></div>
+<script type="text/javascript">
+const bubbleChart = () => {
+  let width = 940
+  let height = 600
+  let tooltip = floatingTooltip('fund_tooltip', 240)
+  let center = { x: width / 2, y: height / 2 }
+  let yearCenters = {
+    2008: { x: width / 3, y: height / 2 },
+    2009: { x: width / 2, y: height / 2 },
+    2010: { x: 2 * width / 3, y: height / 2 }
+  }
+  let damper = 0.102
+  let svg = null
+  let bubbles = null
+  let nodes = []
+
+  const charge = (d) => {
+    return -Math.pow(d.radius, 1.8) / 4
+  }
+
+  let force = d3.layout.force()
+    .size([width, height])
+    .charge(charge)
+    .gravity(-0.01)
+    .friction(0.9)
+  let fillColor = d3.scale.ordinal()
+    .domain(['1', '2', '3', '4', '5'])
+    .range(['green', 'blue', 'yellow', '#F9AD0A', 'red'])
+  let radiusScale = d3.scale.pow()
+    .exponent(0.5)
+    .range([2, 42])
+
+  const createNodes = (rawData) => {
+    let myNodes = rawData.map((d) => {
+      return {
+        id: d.id,
+        radius: radiusScale(+d.total_amount),
+        value: d.total_amount,
+        name: d.grant_title,
+        org: d.organization,
+        group: d.group,
+        year: d.start_year,
+        x: Math.random() * 900,
+        y: Math.random() * 800
+      }
+    })
+
+    myNodes.sort((a, b) => {b.value - a.value})
+    return myNodes
+  }
+
+  let chart = (selector, rawData) => {
+    let maxAmount = d3.max(rawData, (d) => +d.total_amount)
+    radiusScale.domain([0, maxAmount])
+
+    nodes = createNodes(rawData)
+    force.nodes(nodes)
+
+    svg = d3.select(selector)
+      .append('svg')
+      .attr('width', width)
+      .attr('height', height)
+
+    bubbles = svg.selectAll('.bubble')
+      .data(nodes, (d) => { return d.id })
+
+    bubbles.enter().append('circle')
+      .classed('bubble', true)
+      .attr('r', 0)
+      .attr('fill', (d) => { return fillColor(d.group) })
+      .attr('stroke', (d) => { return d3.rgb(fillColor(d.group)).darker() })
+      .attr('stroke-width', 2)
+      .on('mouseover', showDetail)
+      .on('mouseout', hideDetail)
+
+    bubbles.transition()
+      .duration(3000)
+      .attr('r', (d) => { return d.radius })
+    groupBubbles()
+  }
+
+  const groupBubbles = () => {
+    hideYears()
+    force.on('tick', (e) => {
+      bubbles.each(moveToCenter(e.alpha))
+        .attr('cx', (d) => { return d.x })
+        .attr('cy', (d) => { return d.y })
+    })
+    force.start()
+  }
+
+  const moveToCenter = (alpha) => {
+    return (d) => {
+      d.x = d.x + (center.x - d.x) * damper * alpha
+      d.y = d.y + (center.y - d.y) * damper * alpha
+    }
+  }
+
+  const splitBubbles = () => {
+    showYears()
+    force.on('tick', (e) => {
+      bubbles.each(moveToYears(e.alpha))
+        .attr('cx', (d) => { return d.x })
+        .attr('cy', (d) => { return d.y })
+    })
+    force.start()
+  }
+
+  const hideYears = () => {
+    svg.selectAll('.year').remove()
+  }
+
+  const showDetail = (d) => {
+    d3.select(this).attr('stroke', 'black')
+
+    let content = '<span class="name">Fund: </span><span class="value">' +
+                  d.name +
+                  '</span><br/>' +
+                  '<span class="name">Beta: </span><span class="value">' +
+                  addCommas(d.value) +
+                  '</span>'
+    tooltip.showTooltip(content, d3.event)
+  }
+
+  const hideDetail = (d) => {
+    d3.select(this)
+      .attr('stroke', d3.rgb(fillColor(d.group)).darker())
+    tooltip.hideTooltip()
+  }
+
+  chart.toggleDisplay = (displayName) => {
+    if (displayName === 'year') {
+      splitBubbles()
+    } else {
+      groupBubbles()
+    }
+  }
+
+  return chart
+}
+
+let myBubbleChart = bubbleChart()
+
+const display = (error, data) => {
+  if (error) {
+    console.log(error)
+  }
+  myBubbleChart('#vis', data)
+}
+
+d3.json('fund.json', display)
+
+function floatingTooltip(tooltipId, width){
+  let tt = d3.select('body')
+    .append('div')
+    .attr('class', 'tooltip')
+    .attr('id', tooltipId)
+    .style('pointer-events', 'none')
+
+  if (width) {
+    tt.style('width', width)
+  }
+
+  hideTooltip()
+
+  function showTooltip(content, event) {
+    tt.style('opacity', 1.0)
+      .html(content)
+
+    updatePosition(event)
+  }
+
+  function hideTooltip(){
+    tt.style('opacity', 0.0)
+  }
+
+  function updatePosition(event) {
+    let xOffset = 20
+    let yOffset = 10
+
+    let ttw = tt.style('width')
+    let tth = tt.style('height')
+
+    let wscrY = window.scrollY
+    let wscrX = window.scrollX
+
+    let curX = (document.all) ? event.clientX + wscrX : event.pageX
+    let curY = (document.all) ? event.clientY + wscrY : event.pageY
+    let ttleft = ((curX - wscrX + xOffset * 2 + ttw) > window.innerWidth) ?
+                 curX - ttw - xOffset * 2 : curX + xOffset
+
+    if (ttleft < wscrX + xOffset) {
+      ttleft = wscrX + xOffset
+    }
+
+    let tttop = ((curY - wscrY + yOffset * 2 + tth) > window.innerHeight) ?
+                curY - tth - yOffset * 2 : curY + yOffset
+
+    if (tttop < wscrY + yOffset) {
+      tttop = curY + yOffset
+    }
+
+    tt.style({ top: tttop + 'px', left: ttleft + 'px' })
+  }
+
+  return {
+    showTooltip: showTooltip,
+    hideTooltip: hideTooltip,
+    updatePosition: updatePosition
+  }
+}</script>
+    </body>
+  </html>

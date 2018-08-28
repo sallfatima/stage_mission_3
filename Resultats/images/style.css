@@ -1,0 +1,84 @@
+body {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", "Roboto Light", "Segoe UI Web Light", "Segoe UI Light", "Segoe UI Web Regular", "Segoe UI", Helvetica, Arial, sans-serif; 
+  margin: 1em;
+  background: #293950;
+  color: #ecf0f0;
+}
+section {
+  margin: 0 auto;
+}
+h1 {
+  font-weight: normal;
+  font-size: 2.4em;
+  margin-bottom: 30px;
+}
+a {
+  color: gold;
+}
+
+
+/* button */
+#toggle {
+  background-color: #3E606F;
+  border: none;
+  color: #FCFFF5;
+  font: 16px/50px "Bitter", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  height: 50px;
+  padding: 0 30px;
+  transition: background-color 150ms ease-in-out; 
+  margin-bottom: 20px;
+}
+#toggle:hover, #toggle:focus {
+    background-color: #598aa0;
+    outline: none; 
+}
+
+/* 
+ISO Country code by regions: http://www.geohive.com/earth/gen_codes.aspx
+*/
+
+/* Northern America */
+.bm, .ca, .gl, .pm, .us,
+.noram {fill: #CF232B; background: #CF232B;}
+
+/* Latin America and the Caribbean */
+.ai, .ag, .aw, .bs, .bb, .bq, .vg, .ky, .cu, .cw, .dm, .do, .gp, .ht, .jm, .mq, .ms, .pr, .bl, .kn, .lc, .mf, .vc, .sx, .tt, .vi,
+.bz, .crr, .sv, .gt, .hn, .mx, .ni, .pa,
+.ar, .bo, .br, .cl, .co, .ec, .fk, .gf, .gy, .py, .pe, .sr, .uy, .ve,  
+.latam {fill: #FAA916; background: #FAA916;}
+
+/* Europe */
+.by, .bg, .cz, .hu, .md, .pl, .ro, .ru, .sk, .ua, 
+.ax, .dk, .ee, .fo, .fi, .gg, .is, .ie, .je, .lv, .lt, .im, .no, .sj, .se, .gb,
+.al, .ad, .ba, .hr, .gi, .gr, .va, .it, .mk, .mt, .me, .pt, .sm, .rs, .si, .es,
+.at, .be, .fr, .de, .li, .lu, .mc, .nl, .ch,
+.eu { fill: #124E78; background: #124E78;}
+
+/* Asia */
+.kz, .kg, .tj, .tm, .uz,
+.cn, .hk, .mo, .jp, .kp, .kr, .mn, .tw,
+.af, .bd, .bt, .in, .ir, .mv, .np, .pk, .lk,
+.bn, .kh, .id, .la, .my, .mm, .ph, .sg, .th, .tl, .vn,
+.am, .az, .bh, .cy, .ge, .iq, .il, .jo, .kw, .lb, .ps, .om, .qa, .sa, .sy, .tr, .ae, .ye, 
+.asia { fill: #F0F0C9; background:  #F0F0C9;}
+
+/* Oceania */
+.au, .cx, .cc, .nz, .nf,
+.fj, .nc, .pg, .sb, .vu,
+.gu, .ki, .mh, .fm, .nr, .mp, .pw,
+.as, .ck, .pf, .nu, .pn, .ws, .tk, .to, .tv, .wf,  
+.oceania {fill: #F0F0C9; background: #F0F0C9;}
+
+/* Africa */
+.bi, .km, .dj, .er, .et, .ke, .mg, .mw, .mu, .yt, .mz, .re, .rw, .sc, .so, .tz, .ug, .zm, .zw,
+.ao, .cm, .cf, .td, .cg, .cd, .gq, .ga, .st,
+.dz, .eg, .ly, .ma, .ss, .sd, .tn, .eh,
+.bw, .ls, .na,  .za, .sz,
+.bj, .bf, .cv, .gm, .gh, .gn, .gw, .lr, .ml, .mr, .ne, .ng, .sh, .sn, .sl, .tg, 
+.africa {fill: #F495A3; background: #F495A3;}
+
+/* Unclassified */
+.aq, .bv, .io, .tf, .hm, .gs, .um, 
+.a1, .a2, .o1, 
+.other { fill: #45B29D; background: #45B29D;}

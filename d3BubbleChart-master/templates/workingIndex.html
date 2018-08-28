@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% extends "index.html" %}
+{% block header %}
+<h3>Assignment 6 -  Task 1</h3>
+{% endblock %}
+{% block javascript %}
+<script>
+
+  //create svg
+  var svg = d3.select("#dataContainer")
+  .append("svg")
+  .attr("width", 1000)
+  .attr("height", 400);
+
+  var numberData = createList();
+
+  for (var t = 0; t < numberData.length; t++) {
+    svg.append('rect')
+      .attr('x',18*t+10)
+      .attr('y', function(dataValue) {
+        return 400 - numberData[t];
+      })
+      .attr('width', 13)
+      .attr('height', function(dataValue) {
+        return numberData[t];
+      })
+      .attr('fill', 'black');
+    }
+
+function createList() {
+  var numbers = [];
+  for (var i = 0; i < 50; i++) {
+    numbers.push(getRandomIntInclusive(5,300));
+  }
+
+  return numbers;
+}
+
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+</script>
+{% endblock %}

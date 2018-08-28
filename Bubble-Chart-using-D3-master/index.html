@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<title>Mobile Subscription vs Telephone Subscription</title>
+<style>
+@import url(style.css?aea6f0a);
+#chart {margin-left: -40px; height: 506px;}
+text {font: 15px Times New Roman;}
+.dot {stroke: #000;}
+.axis path, .axis line {fill: none;stroke: steelblue;shape-rendering: crispEdges;}
+.label {fill: #777;}
+.year.label {font: 600 150px "Times New Roman";fill: steelblue;}
+.year.label.active {fill: #000;}
+.overlay {fill: none;pointer-events: all;cursor: ew-resize;}
+</style>
+
+<h1>Mobile Subscription vs Telephone Subscription</h1>
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script></script>
+<script>
+var margin = {top: 20, right: 20, bottom: 20, left: 40},
+    width = 1000 - margin.right,
+    height = 550 - margin.top - margin.bottom;
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+var xScale = d3.scale.log().domain([300000, 6e10]).range([0, width]),
+    yScale = d3.scale.log().domain([500000, 5e8]).range([height, 0]),
+    radiusScale = d3.scale.sqrt().domain([0, 6e8]).range([0, 40]),
+    colorScale = d3.scale.category10();
+var xAxis = d3.svg.axis().orient("bottom").scale(xScale).ticks(5, d3.format(",d")),
+    yAxis = d3.svg.axis().orient("left").scale(yScale).ticks(5, d3.format(",d"));
+svg.append("g").attr("class", "x axis").attr("transform", "translate(70," + height + ")").call(xAxis);
+svg.append("text").attr("class", "x label").attr("text-anchor", "end").attr("x", width).attr("y", height - 6).text("Mobile Cellular Subscription");
+svg.append("g").attr("class", "y axis").attr("transform", "translate(70,0)").call(yAxis);
+svg.append("text").attr("class", "y label").attr("text-anchor", "end").attr("y", 80).attr("dy", ".75em").attr("transform", "rotate(-90)").text("Telephone Subscription");
+var label = svg.append("text").attr("class", "year label").attr("text-anchor", "end").attr("y", height - 24).attr("x", width).text(2000);
+function xaxis(d) { return d.mobile; }
+function yaxis(d) { return d.telephone; }
+function population(d) { return d.population; }
+function CountryCode(d) { return d.CountryCode; }
+function CountryName(d) { return d.CountryName; }
+
+// Load the data.
+d3.json("https://api.myjson.com/bins/4u0th", function(data) {
+
+  var bisect = d3.bisector(function(d) { return d[0]; });
+
+  var dot = svg.append("g").attr("class", "dots").selectAll(".dot")
+      .data(interpolateData(2000))
+    .enter().append("circle").attr("class", "dot").style("fill", function(d) { return colorScale(CountryCode(d)); }).call(position).sort(order);
+      
+  function interpolateData(year) {
+    return data.map(function(d) {
+      return {CountryName: d.CountryName,
+      CountryCode: d.CountryCode,
+      mobile: Values(d.mobile, year),
+      population: Values(d.population, year),
+      telephone: Values(d.telephone, year)
+      };});} 
+  
+  function Values(values, year) {var j = bisect.left(values, year, 0, values.length - 1),x = values[j];
+    if (j > 0) {var y = values[j - 1],t = (year - x[0]) / (y[0] - x[0]);return x[1] * (1 - t) + y[1] * t;}return x[1];}     
+
+  dot.append("title").text(function(d) { return "Country Name:" + d.CountryName + "\nPopulation:" + d.population; });
+
+  var box = label.node().getBBox();
+  var overlay = svg.append("rect").attr("class", "overlay").attr("x", box.x).attr("y", box.y).attr("width", box.width).attr("height", box.height).on("mouseover", enableInteraction);
+
+  svg.transition().duration(9000).ease("linear").tween("year", tweenYear).each("end", enableInteraction);
+
+  function position(dot) {
+    dot .attr("cx", function(d) { return xScale(xaxis(d)); }).attr("cy", function(d) { return yScale(yaxis(d)); })
+        .attr("r", function(d) { return radiusScale(population(d)); });}
+
+ 
+  function order(a, b) {return population(b) - population(a);}
+  
+  function enableInteraction() {
+    var yearScale = d3.scale.linear()
+        .domain([2000, 2015])
+        .range([box.x + 10, box.x + box.width - 10])
+        .clamp(true);
+    overlay.on("mouseover", mouseover).on("mouseout", mouseout).on("mousemove", mousemove).on("touchmove", mousemove);  
+    function mouseover() {label.classed("active", true);}
+	function mouseout() {label.classed("active", false);}
+	function mousemove() {displayYear(yearScale.invert(d3.mouse(this)[0]));  
+    }}
+  function tweenYear() {var year = d3.interpolateNumber(2000, 2015);return function(t) { displayYear(year(t)); };}
+  function displayYear(year) {dot.data(interpolateData(year), CountryName).call(position).sort(order);label.text(Math.round(year));}
+});
+</script>
+

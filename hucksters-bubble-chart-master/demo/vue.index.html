@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>hucksters-bubble-chart demo</title>
+
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.9.1/d3.min.js" charset="utf-8"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <link rel="import" href="../hucksters-bubble-chart.html">
+
+</head>
+
+<body>
+  <div class="vertical-section-container centered" id="app">
+    <h3>Basic hucksters-bubble-chart demo</h3>
+    <hucksters-bubble-chart></hucksters-bubble-chart>
+  </div>
+  <script>
+    var app = new Vue({
+          el: '#app',
+          mounted: function () {
+            var hbc = document.querySelector('hucksters-bubble-chart');
+            hbc.set('title', 'Нагрузка на заемщиков');
+            hbc.set('xlabel', 'долг/EBIDTA');
+            hbc.set('ylabel', 'процентная ставка');
+            hbc.set('chartData', [{
+              x: 0,
+              y: 3,
+              r: 10,
+              color: 'red',
+              info: [
+                [{
+                  'value': 'Долг',
+                }, {
+                  'value': '10 млн. руб.',
+                }],
+              ],
+            }, {
+              x: 5,
+              y: 5,
+              r: 120,
+              color: 'yellow',
+              info: [
+                [{
+                  'value': 'Долг (млн. руб.)'
+                }, {
+                  'value': 120
+                }]
+              ],
+            }, {
+              x: 10,
+              y: 0,
+              r: 200,
+              color: 'green',
+              info: [
+                [{
+                  'value': 'Долг (млн. руб.)'
+                }, {
+                  'value': 200
+                }]
+              ],
+            }, ]);
+          },
+          data: {
+            width: 121,
+          },
+        });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+<html> 
+  <head> 
+   <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+  </head> 
+  <body>
+
+    <script type="text/javascript"> 
+      
+      var svg = d3.select("body").append("svg")
+        .attr("width", 800)
+        .attr("height", 400);
+
+      var is_drawing = false;
+
+      svg.on('mousemove', function(){
+
+        var pos = d3.mouse(this);
+
+        if (is_drawing) {
+          svg.append("circle")
+            .attr("cx", pos[0])
+            .attr("cy", pos[1])
+            .style("fill", "red")
+            .attr("r", 3);
+        }
+      }).on('mousedown', function(){
+        is_drawing = true;
+      }).on('mouseup', function(){
+        is_drawing = false;
+      });
+
+    </script>
+  </body> 
+</html>
